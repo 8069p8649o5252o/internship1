@@ -1,0 +1,59 @@
+import nltk
+import random
+import string
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+lemmatizer = WordNetLemmatizer()
+
+# Sample conversation data
+corpus = """
+Hello
+Hi
+How are you
+I am fine
+What is your name
+My name is ChatBot
+What is AI
+AI means Artificial Intelligence
+What is Python
+Python is a programming language
+"""
+
+sentences = nltk.sent_tokenize(corpus)
+
+def preprocess(text):
+    text = text.lower()
+    tokens = word_tokenize(text)
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in stopwords.words('english')]
+    return tokens
+
+def chatbot_response(user_input):
+    user_tokens = preprocess(user_input)
+    
+    for sentence in sentences:
+        sentence_tokens = preprocess(sentence)
+        if set(user_tokens).intersection(sentence_tokens):
+            return sentence
+    return "Sorry, I don't understand."
+
+print("AI Chatbot is ready! Type 'bye' to exit.")
+
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == 'bye':
+        print("ChatBot: Goodbye!")
+        break
+    else:
+        print("ChatBot:", chatbot_response(user_input))
+
+
+
+
+
+
